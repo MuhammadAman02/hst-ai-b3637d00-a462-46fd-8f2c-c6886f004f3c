@@ -1,16 +1,29 @@
 from pydantic_settings import BaseSettings
-import os
+from pydantic import Field
 from typing import Optional
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class Settings(BaseSettings):
-    APP_NAME: str = "My Enterprise App"
-    APP_VERSION: str = "1.0.0"  # Semantic versioning
-    APP_ENV: str = os.getenv("APP_ENV", "development")
-    DEBUG: bool = False
+    """Application configuration with validation."""
+    
+    # Application Settings
+    APP_NAME: str = Field(default="ML Engineer Portfolio")
+    APP_VERSION: str = Field(default="1.0.0")
+    APP_ENV: str = Field(default="development")
+    DEBUG: bool = Field(default=False)
+    
+    # Server Settings
+    HOST: str = Field(default="0.0.0.0")
+    PORT: int = Field(default=8000)
+    FRAMEWORK: str = Field(default="nicegui")
     
     class Config:
         env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"  # Ignore extra fields in environment variables
+        case_sensitive = True
 
+# Create settings instance
 settings = Settings()
